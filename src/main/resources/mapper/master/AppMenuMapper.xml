@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.security.mapper.master.AppMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.spring.security.domain.master.AppMenu" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="menuName" property="menuname" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentid" jdbcType="INTEGER" />
+    <result column="menuCode" property="menucode" jdbcType="VARCHAR" />
+    <result column="menuUrl" property="menuurl" jdbcType="VARCHAR" />
+    <result column="urlTarget" property="urltarget" jdbcType="VARCHAR" />
+    <result column="navMenu" property="navmenu" jdbcType="INTEGER" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="lastUpdate" property="lastupdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, menuName, parentId, menuCode, menuUrl, urlTarget, navMenu, sort, remark, createTime, 
+    lastUpdate
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.spring.security.domain.master.AppMenuExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from t_app_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_app_menu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_app_menu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.spring.security.domain.master.AppMenuExample" >
+    delete from t_app_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.spring.security.domain.master.AppMenu" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_app_menu (menuName, parentId, menuCode, 
+      menuUrl, urlTarget, navMenu, 
+      sort, remark, createTime, 
+      lastUpdate)
+    values (#{menuname,jdbcType=VARCHAR}, #{parentid,jdbcType=INTEGER}, #{menucode,jdbcType=VARCHAR}, 
+      #{menuurl,jdbcType=VARCHAR}, #{urltarget,jdbcType=VARCHAR}, #{navmenu,jdbcType=INTEGER}, 
+      #{sort,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{lastupdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.spring.security.domain.master.AppMenu" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_app_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuname != null" >
+        menuName,
+      </if>
+      <if test="parentid != null" >
+        parentId,
+      </if>
+      <if test="menucode != null" >
+        menuCode,
+      </if>
+      <if test="menuurl != null" >
+        menuUrl,
+      </if>
+      <if test="urltarget != null" >
+        urlTarget,
+      </if>
+      <if test="navmenu != null" >
+        navMenu,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="lastupdate != null" >
+        lastUpdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuname != null" >
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="menucode != null" >
+        #{menucode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuurl != null" >
+        #{menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="urltarget != null" >
+        #{urltarget,jdbcType=VARCHAR},
+      </if>
+      <if test="navmenu != null" >
+        #{navmenu,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdate != null" >
+        #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.spring.security.domain.master.AppMenuExample" resultType="java.lang.Integer" >
+    select count(*) from t_app_menu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_app_menu
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.menuname != null" >
+        menuName = #{record.menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentid != null" >
+        parentId = #{record.parentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.menucode != null" >
+        menuCode = #{record.menucode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuurl != null" >
+        menuUrl = #{record.menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urltarget != null" >
+        urlTarget = #{record.urltarget,jdbcType=VARCHAR},
+      </if>
+      <if test="record.navmenu != null" >
+        navMenu = #{record.navmenu,jdbcType=INTEGER},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort,jdbcType=INTEGER},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createTime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastupdate != null" >
+        lastUpdate = #{record.lastupdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_app_menu
+    set id = #{record.id,jdbcType=INTEGER},
+      menuName = #{record.menuname,jdbcType=VARCHAR},
+      parentId = #{record.parentid,jdbcType=INTEGER},
+      menuCode = #{record.menucode,jdbcType=VARCHAR},
+      menuUrl = #{record.menuurl,jdbcType=VARCHAR},
+      urlTarget = #{record.urltarget,jdbcType=VARCHAR},
+      navMenu = #{record.navmenu,jdbcType=INTEGER},
+      sort = #{record.sort,jdbcType=INTEGER},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      createTime = #{record.createtime,jdbcType=TIMESTAMP},
+      lastUpdate = #{record.lastupdate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.spring.security.domain.master.AppMenu" >
+    update t_app_menu
+    <set >
+      <if test="menuname != null" >
+        menuName = #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="parentid != null" >
+        parentId = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="menucode != null" >
+        menuCode = #{menucode,jdbcType=VARCHAR},
+      </if>
+      <if test="menuurl != null" >
+        menuUrl = #{menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="urltarget != null" >
+        urlTarget = #{urltarget,jdbcType=VARCHAR},
+      </if>
+      <if test="navmenu != null" >
+        navMenu = #{navmenu,jdbcType=INTEGER},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastupdate != null" >
+        lastUpdate = #{lastupdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.spring.security.domain.master.AppMenu" >
+    update t_app_menu
+    set menuName = #{menuname,jdbcType=VARCHAR},
+      parentId = #{parentid,jdbcType=INTEGER},
+      menuCode = #{menucode,jdbcType=VARCHAR},
+      menuUrl = #{menuurl,jdbcType=VARCHAR},
+      urlTarget = #{urltarget,jdbcType=VARCHAR},
+      navMenu = #{navmenu,jdbcType=INTEGER},
+      sort = #{sort,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      lastUpdate = #{lastupdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="log.base" value="D://yang/"/> <!-- 日志路径，这里是相对路径  -->
+    <property name="log.moduleName" value="SpringSecurity"/>  <!-- 模块名称， 影响日志配置名，日志文件名 -->
+    <property name="log.max.size" value="100MB"/> <!-- 日志文件大小 -->
+
+    <!--控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{56}.%method\(\): -%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <!-- 日志文件输出 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 设置日志不超过${log.max.size}时的保存路径，注意如果 是web项目会保存到Tomcat的bin目录 下 -->
+        <File>${log.base}/${log.moduleName}.log</File>
+        <!-- 滚动记录文件，先将日志记录到指定文件，当符合某个条件时，将日志记录到其他文件。-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.base}/archive/${log.moduleName}_all_%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <!-- 当天的日志大小 超过${log.max.size}时,压缩日志并保存 -->
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.max.size}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <!-- 日志输出的文件的格式  -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level %logger{56}.%method\(\): -%msg%n</pattern>
+        </layout>
+    </appender>
+
+    <!-- 日志级别 TRACE、DEBUG、INFO、WARN、ERROR-->
+    <root level="INFO">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+    <!-- 在这些命名空间记录器，记录各级. -->
+    <logger name="org.apache.http" level="OFF"/>
+    <logger name="org.hibernate" level="OFF"/>
+    <logger name="org.apache" level="OFF"/>
+    <logger name="org.springframework" level="OFF"/>
+
+    <logger name="com.spring.security" level="ALL"/>
+
+    <logger name="java.sql.Connection" level="DEBUG"/>
+    <logger name="java.sql.Statement" level="DEBUG"/>
+    <logger name="java.sql.PreparedStatement" level="DEBUG"/>
+
+
+</configuration>

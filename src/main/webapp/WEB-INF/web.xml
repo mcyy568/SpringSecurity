@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>SpringSecurity</display-name>
+
+    <!--springmvc监听器-->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!--添加日志监听器-->
+    <listener>
+        <listener-class>ch.qos.logback.ext.spring.web.LogbackConfigListener</listener-class>
+    </listener>
+
+    <!-- 加载Spring的配置文件 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath:spring-config.xml,
+            classpath:spring-security.xml
+        </param-value>
+    </context-param>
+
+    <!--SpringMvc核心配置-->
+    <servlet>
+        <servlet-name>SpringMvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath*:spring-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpringMvc</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!--spring-security核心配置-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 中文Post问题 -->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <error-page>
+        <error-code>403</error-code>
+        <location>/common/403.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/common/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/common/500.jsp</location>
+    </error-page>
+</web-app>

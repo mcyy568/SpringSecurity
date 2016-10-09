@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="
+                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+	            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.1.xsd">
+
+    <!-- 开发环境可以放置 <debug /> 配置，会输出详细Security处理日志，正式环境建议屏蔽 <debug /> 配置 -->
+    <debug/>
+
+    <!--
+    开启支持方法注解的权限控制：
+    @PreAuthorize：该注解用来确定一个方法是否应该被执行。该注解后面跟着的是一个表达式，如果表达式的值为真，则该方法会被执行。如 @PreAuthorize("hasRole('ROLE_USER')")就说明只有当前用户具有角色 ROLE_USER的时候才会执行。
+    @PostAuthorize：该注解用来在方法执行完之后进行访问控制检查。
+    @PostFilter：该注解用来对方法的返回结果进行过滤。从返回的集合中过滤掉表达式值为假的元素。如@PostFilter("hasPermission(filterObject, 'read')")说明返回的结果中只保留当前用户有读权限的元素。
+    @PreFilter：该注解用来对方法调用时的参数进行过滤。
+    -->
+    <!--<global-method-security pre-post-annotations="enabled"/>-->
+
+    <!-- 不用权限管理的资源路径 -->
+    <http pattern="/register" security="none"/>
+
+    <http entry-point-ref="loginEntryPoint">
+        <!-- 替换默认的LogoutFilter 注销过滤器 -->
+        <custom-filter ref="customLogoutFilter" position="LOGOUT_FILTER"/>
+        <!-- 替换默认的LoginFilter 表单登录器 -->
+        <custom-filter ref="customLoginFilter" position="FORM_LOGIN_FILTER"/>
+
+        <access-denied-handler ref="accessDeniedHandlerImpl"/>
+
+        <!--使用自定义过滤器这里不用配置配置都写在数据库-->
+        <!--<intercept-url pattern="/HomePage" access="hasRole('ROLE_USER')"/>-->
+
+        <!-- 以上未列出的，也都必须验证才能访问 -->
+        <!--<intercept-url pattern="/**" access="isAuthenticated()"/>-->
+
+        <!-- 使用自定义的过滤器 设置权限的使用 -->
+        <custom-filter ref="webSecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+    </http>
+
+
+
+    <beans:bean id="accessDeniedHandlerImpl" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+        <beans:property name="errorPage" value="/common/403.jsp"/>
+    </beans:bean>
+
+    <authentication-manager alias="webAuthenticationManager">
+        <!-- 加入开发人员自定义的Provider -->
+        <!--<authentication-provider ref="customProvider"/>-->
+        <authentication-provider user-service-ref="webUserDetailsService">
+            <!-- 密码的加密解密类 -->
+            <password-encoder ref="pwEncoder"/>
+            <!-- 或 -->
+            <!--<password-encoder hash="md5"/>-->
+        </authentication-provider>
+
+        <!--
+        其它补充说明：
+        当用户不存在时，也是提示 Bad credentials (即密码错误)，这是为了安全性，防止被暴力猜测用户名
+        如果您要提示用户不存在的信息，则需要将 org.springframework.security.authentication.dao.DaoAuthenticationProvider 中的 hideUserNotFoundExceptions 设为false，即可
+        具体修改配置如下：-->
+        <authentication-provider ref="authenticationProvider"/>
+    </authentication-manager>
+
+    <!-- 密码的加密解密类，可以换成自己的，实现 PasswordEncoder 接口即可 -->
+    <beans:bean id="pwEncoder" class="org.springframework.security.crypto.password.StandardPasswordEncoder">
+        <beans:constructor-arg name="secret" value="my-secret-key"/> <!--注意这里密钥-->
+    </beans:bean>
+
+    <!--<beans:bean id="customProvider" class="com.spring.security.security.CustomAuthenticationProvider"/>-->
+
+    <!-- 默认登录页的url -->
+    <beans:bean id="loginEntryPoint"
+                class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <beans:constructor-arg value="/login"/>
+    </beans:bean>
+
+    <beans:bean id="customLoginFilter" class="com.spring.security.security.login.CustomLoginFilter">
+        <!-- 校验登录是否有效的虚拟url -->
+        <beans:property name="filterProcessesUrl" value="/checklogin"/>
+        <beans:property name="authenticationManager" ref="webAuthenticationManager"/>
+        <beans:property name="usernameParameter" value="username"/>
+        <beans:property name="passwordParameter" value="password"/>
+        <beans:property name="authenticationSuccessHandler">
+            <!-- 自定义登录成功后的处理handler -->
+            <beans:bean class="com.spring.security.security.login.CustomLoginHandler">
+                <!-- 登录成功后的默认url -->
+                <beans:property name="defaultTargetUrl" value="/HomePage"/>
+            </beans:bean>
+        </beans:property>
+        <beans:property name="authenticationFailureHandler">
+            <!--<beans:bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">-->
+            <beans:bean class="com.spring.security.security.login.SimpleUrlAuthenticationFailureHandler">
+                <!-- 登录失败后的默认Url -->
+                <beans:property name="defaultFailureUrl" value="/login?error"/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="customLogoutFilter" class="com.spring.security.security.logout.CustomLogoutFilter">
+        <!-- 处理退出的虚拟url -->
+        <beans:property name="filterProcessesUrl" value="/logout"/>
+        <!-- 退出处理成功后的默认显示url -->
+        <beans:constructor-arg index="0" value="/login?logout"/>
+        <beans:constructor-arg index="1">
+            <!-- 退出成功后的handler列表 -->
+            <beans:array>
+                <beans:bean id="securityContextLogoutHandler"
+                            class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler"/>
+                <!-- 加入了开发人员自定义的退出成功处理 -->
+                <beans:bean id="customLogoutSuccessHandler"
+                            class="com.spring.security.security.logout.CustomLogoutHandler"/>
+            </beans:array>
+        </beans:constructor-arg>
+    </beans:bean>
+
+
+    <!-- 配置自定义的过滤器 -->
+    <!--如果使用SPRING注解方式，则可直接注释掉-->
+
+    <!--authenticationManager：用户拥有的权限-->
+    <!--accessDecisionManager：用户是否拥有所请求资源的权限-->
+    <!--securityMetadataSource：资源与权限对应关系-->
+    <beans:bean id="webSecurityFilter" class="com.spring.security.security.file.WebSecurityFilter">
+        <beans:property name="authenticationManager" ref="webAuthenticationManager"/>
+        <beans:property name="accessDecisionManager" ref="webAccessDecisionManager"/>
+        <beans:property name="securityMetadataSource" ref="webSecurityMetadataSource"/>
+    </beans:bean>
+    <!--或直接使用Spring自带的URL过滤器-->
+    <!--<beans:bean id="filterSecurityInterceptor"-->
+    <!--class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">-->
+    <!--<beans:property name="authenticationManager" ref="webAuthenticationManager"/>-->
+    <!--<beans:property name="accessDecisionManager" ref="webAccessDecisionManager"/>-->
+    <!--<beans:property name="securityMetadataSource" ref="webSecurityMetadataSource"/>-->
+    <!--</beans:bean>-->
+
+    <!-- 核心验证类 -->
+    <!-- 如果使用SPRING注解方式，则可直接注释掉 -->
+    <beans:bean id="webUserDetailsService" class="com.spring.security.security.WebUserDetailsService"/>
+    <beans:bean id="webAccessDecisionManager" class="com.spring.security.security.file.WebAccessDecisionManager"/>
+    <beans:bean id="webSecurityMetadataSource" class="com.spring.security.security.security.WebSecurityMetadataSource"/>
+
+    <beans:bean id="authenticationProvider"
+                class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <beans:property name="userDetailsService" ref="webUserDetailsService"/>
+        <beans:property name="hideUserNotFoundExceptions" value="false"/>
+        <beans:property name="passwordEncoder" ref="pwEncoder"/>
+    </beans:bean>
+
+</beans:beans>

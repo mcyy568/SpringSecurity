@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.spring.security.mapper.self.RoleAndMenuMapper">
+
+    <select id="getAppRolesByUserId" resultType="com.spring.security.domain.master.AppRole">
+        SELECT tar.*
+        FROM t_app_role AS tar
+        <if test="id != null">
+            LEFT JOIN t_app_user_role AS taur ON tar.id = taur.roleId
+            LEFT JOIN t_app_user tau ON tau.id = taur.userId
+            WHERE 1 = 1 AND tau.id = #{id} AND tar.status = #{status}
+            GROUP BY tar.id
+        </if>
+        <if test="id == null">
+            WHERE 1 = 1 AND tar.status = #{status}
+        </if>
+    </select>
+
+    <select id="getAppMenusByUserId" resultType="com.spring.security.domain.master.AppMenu">
+        SELECT tam.*
+        FROM t_app_menu AS tam
+        <if test="id != null">
+            LEFT JOIN t_app_role_menu AS tarm ON tarm.menuId = tam.id
+            LEFT JOIN t_app_role AS tar ON tarm.roleId = tar.id
+            LEFT JOIN t_app_user_role AS taur ON tar.id = taur.roleId
+            LEFT JOIN t_app_user tau ON tau.id = taur.userId
+            WHERE 1 = 1 AND tau.id = #{id}
+            <if test="navMenu != null">
+                AND tam.navMenu = #{navMenu}
+            </if>
+            GROUP BY tam.id
+        </if>
+        <if test="id == null">
+            <if test="navMenu != null">
+                tam.navMenu = #{navMenu}
+            </if>
+        </if>
+    </select>
+
+    <select id="getAppMenusByRoleId" resultType="com.spring.security.domain.master.AppMenu">
+        SELECT tam.*
+        FROM t_app_menu AS tam
+        <if test="id != null">
+            LEFT JOIN t_app_role_menu AS tarm ON tarm.menuId = tam.id
+            LEFT JOIN t_app_role AS tar ON tarm.roleId = tar.id
+            WHERE 1 = 1 AND tar.id = #{id}
+            <if test="navMenu != null">
+                AND tam.navMenu = #{navMenu}
+            </if>
+            GROUP BY tam.id;
+        </if>
+        <if test="id == null">
+            <if test="navMenu != null">
+                tam.navMenu = #{navMenu}
+            </if>
+        </if>
+    </select>
+
+</mapper>

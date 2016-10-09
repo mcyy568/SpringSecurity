@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+             xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+    <!-- 对包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能-->
+    <context:annotation-config />
+
+    <!-- 使用Spring MVC @控制器的编程模型 -->
+    <annotation-driven />
+
+    <!-- 扫描所有的controller 但是不扫描service-->
+    <context:component-scan base-package="com.spring.security.controller">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+    </context:component-scan>
+
+    <!-- 激活自动代理功能 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <resources mapping="/common/**" location="/common/" />
+
+    <!-- 定义Spring MVC 的模板文件 -->
+    <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--<beans:property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>&lt;!&ndash; 支持JSTL &ndash;&gt;-->
+        <beans:property name="prefix" value="/WEB-INF/views/" />
+        <beans:property name="suffix" value=".jsp" />
+    </beans:bean>
+
+    <!-- Kaptcha验证码生成器
+            kaptcha.border.color：边框颜色
+            kaptcha.border.thickness：边框宽度
+            kaptcha.textproducer.char.length：产生字符的长度
+            kaptcha.textproducer.font.size：产生字符的大小
+            kaptcha.image.width：产生图片的宽度
+            kaptcha.image.height：产生图片的高度，等
+    -->
+<!--    <beans:bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <beans:property name="config">
+            <beans:bean class="com.google.code.kaptcha.util.Config">
+                <beans:constructor-arg>
+                    <beans:props>
+                        <beans:prop key="kaptcha.border">yes</beans:prop>
+                        <beans:prop key="kaptcha.border.color">105,179,90</beans:prop>
+                        <beans:prop key="kaptcha.textproducer.font.color">blue</beans:prop>
+                        <beans:prop key="kaptcha.obscurificator.impl">com.google.code.kaptcha.impl.ShadowGimpy</beans:prop>
+                        <beans:prop key="kaptcha.image.width">85</beans:prop>
+                        <beans:prop key="kaptcha.image.height">33</beans:prop>
+                        <beans:prop key="kaptcha.textproducer.font.size">30</beans:prop>
+                        <beans:prop key="kaptcha.session.key">code</beans:prop>
+                        <beans:prop key="kaptcha.textproducer.char.length">4</beans:prop>
+                        <beans:prop key="kaptcha.textproducer.font.names">宋体,楷体,微软雅黑</beans:prop>
+                    </beans:props>
+                </beans:constructor-arg>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>-->
+
+</beans:beans>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd  ">
+
+    <description>Spring-database配置</description>
+
+    <context:property-placeholder location="classpath:conf/*.properties"/>
+
+    <!-- 自动扫描组件,这里要把controler下面的 controller去除,如果不去除会影响事务管理的-->
+    <context:component-scan base-package="com.spring.security">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
+    <bean id="dataSourceMaster" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <!-- Connection Info -->
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="${jdbc.master.url}"/>
+        <property name="username" value="${jdbc.master.username}"/>
+        <property name="password" value="${jdbc.master.password}"/>
+        <!-- Connection Pooling Info -->
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="500"/>
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="defaultAutoCommit" value="false"/>
+    </bean>
+
+    <!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
+    <bean id="dataSourceSlave" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <!-- Connection Info -->
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="${jdbc.slave.url}"/>
+        <property name="username" value="${jdbc.slave.username}"/>
+        <property name="password" value="${jdbc.slave.password}"/>
+        <!-- Connection Pooling Info -->
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxIdle" value="30"/>
+        <property name="maxWait" value="500"/>
+        <property name="poolPreparedStatements" value="false"/>
+        <property name="defaultAutoCommit" value="false"/>
+    </bean>
+
+    <!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
+    <bean id="dataSource" class="com.spring.security.util.DynamicDataSource">
+        <!-- Connection Info -->
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="dataSourceMaster" key="dataSourceMaster"/>
+                <entry value-ref="dataSourceSlave" key="dataSourceSlave"/>
+            </map>
+        </property>
+        <!-- 默认连接的数据源、 -->
+        <property name="defaultTargetDataSource" ref="dataSourceMaster"/>
+    </bean>
+
+    <!-- mybatis配置 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" p:dataSource-ref="dataSource"
+          p:typeAliasesPackage="com.spring.security.domain.*" p:mapperLocations="classpath:/mapper/*/*.xml"/>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.spring.security.mapper.*"/>
+    </bean>
+
+    <!-- 事务管理器，使用 DataSourceTransactionManager -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- spring 声明事务管理 -->
+    <aop:config>
+        <aop:pointcut id="fooServiceMethods" expression="execution(* com.spring.*.service.impl.*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceMethods"/>
+    </aop:config>
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="load*" read-only="true"/>
+            <tx:method name="*" rollback-for="CustomException"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 支持异步方法执行 -->
+    <task:annotation-driven/>
+</beans>
