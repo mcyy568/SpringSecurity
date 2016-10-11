@@ -598,7 +598,7 @@ var App = function () {
             var footerOption = $('.footer-option', panel).val();
 
             if (sidebarOption == "fixed" && headerOption == "default") {
-                alert('Default Header with Fixed Sidebar option is not supported. Proceed with Default Header with Default Sidebar.');
+                alert('固定侧边栏选项默认的标题是不支持的。继续用默认侧边栏默认标题。');
                 $('.sidebar-option', panel).val("default");
                 sidebarOption = 'default';
             }

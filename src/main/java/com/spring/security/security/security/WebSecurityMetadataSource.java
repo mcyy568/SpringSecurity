@@ -1,19 +1,8 @@
 package com.spring.security.security.security;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-
-import com.spring.security.domain.master.*;
-import com.spring.security.mapper.master.*;
+import com.spring.security.domain.master.AppMenu;
+import com.spring.security.domain.master.AppRole;
 import com.spring.security.mapper.self.RoleAndMenuMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +10,12 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * 创建用户：杨辽
@@ -66,7 +59,7 @@ public class WebSecurityMetadataSource implements FilterInvocationSecurityMetada
         //role 参数也可以直接使用角色名
         ConfigAttribute ca = new SecurityConfig(role.getName());
 
-        role.setAppMenus(roleAndMenuMapper.getAppMenusByRoleId(role.getId(), 1));
+        role.setAppMenus(roleAndMenuMapper.getAppMenusByRoleId(role.getId(), null));
 
         this.handleRoleAndMenu(role.getAppMenus(), ca);
     }
@@ -101,7 +94,8 @@ public class WebSecurityMetadataSource implements FilterInvocationSecurityMetada
             //AntPathRequestMatcher : 来自于Ant项目，是一种简单易懂的路径匹配策略。
             //RegexRequestMatcher : 如果 AntPathRequestMatcher 无法满足需求，
             //还可以选择使用更强大的RegexRequestMatcher，它支持使用正则表达式对URL地址进行匹配
-            RequestMatcher requestMatcher = new AntPathRequestMatcher(resourceURL);
+//            RequestMatcher requestMatcher = new AntPathRequestMatcher(resourceURL);
+            RequestMatcher requestMatcher = new RegexRequestMatcher(resourceURL, request.getMethod(), true);
             if (requestMatcher.matches(request)) {
                 return resourceMap.get(resourceURL);
             }

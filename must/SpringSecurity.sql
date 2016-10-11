@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50536
 File Encoding         : 65001
 
-Date: 2016-10-09 11:47:08
+Date: 2016-10-11 14:11:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -32,15 +32,16 @@ CREATE TABLE `t_app_menu` (
   `createTime` datetime NOT NULL,
   `lastUpdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of t_app_menu
 -- ----------------------------
-INSERT INTO `t_app_menu` VALUES ('1', '首页', '0', 'icon-home', '/HomePage', '首页', '1', '1', '备注', '2013-03-28 00:00:00', '2013-03-28 00:00:00');
-INSERT INTO `t_app_menu` VALUES ('2', '权限管理', '0', 'icon-briefcase', '/HomePage', '权限管理', '1', '2', '备注', '2016-10-04 20:07:50', '2016-10-04 20:07:52');
-INSERT INTO `t_app_menu` VALUES ('3', '角色管理', '2', 'icon-group', '/HomePage2', '角色管理', '1', '3', '备注', '2016-10-04 20:09:23', '2016-10-04 20:09:25');
-INSERT INTO `t_app_menu` VALUES ('4', '查看权限', '2', 'icon-cogs', '/HomePage', '查看权限', '1', '4', '备注', '2016-10-04 20:54:19', '2016-10-04 20:54:21');
+INSERT INTO `t_app_menu` VALUES ('1', '系统主体', '0', '无样式', '^/home/.*$', '系统主体', '0', '0', '系统主体', '2016-10-11 10:53:56', '2016-10-11 10:53:58');
+INSERT INTO `t_app_menu` VALUES ('2', '首页', '0', 'icon-home', '/homePage', '首页', '1', '1', '备注', '2013-03-28 00:00:00', '2013-03-28 00:00:00');
+INSERT INTO `t_app_menu` VALUES ('3', '系统管理', '0', 'icon-briefcase', '', '系统管理', '1', '2', '备注', '2016-10-04 20:07:50', '2016-10-04 20:07:52');
+INSERT INTO `t_app_menu` VALUES ('4', '角色管理', '3', 'icon-group', '/role', '角色管理', '1', '3', '备注', '2016-10-04 20:09:23', '2016-10-04 20:09:25');
+INSERT INTO `t_app_menu` VALUES ('5', '权限管理', '3', 'icon-cogs', '/menu', '权限管理', '1', '4', '备注', '2016-10-04 20:54:19', '2016-10-04 20:54:21');
 
 -- ----------------------------
 -- Table structure for t_app_role
@@ -71,7 +72,7 @@ CREATE TABLE `t_app_role_menu` (
   `roleId` int(11) NOT NULL COMMENT '角色id',
   `menuId` int(11) NOT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of t_app_role_menu
@@ -80,7 +81,9 @@ INSERT INTO `t_app_role_menu` VALUES ('1', '1', '1');
 INSERT INTO `t_app_role_menu` VALUES ('2', '1', '2');
 INSERT INTO `t_app_role_menu` VALUES ('3', '1', '3');
 INSERT INTO `t_app_role_menu` VALUES ('4', '1', '4');
-INSERT INTO `t_app_role_menu` VALUES ('5', '2', '1');
+INSERT INTO `t_app_role_menu` VALUES ('5', '1', '5');
+INSERT INTO `t_app_role_menu` VALUES ('6', '2', '1');
+INSERT INTO `t_app_role_menu` VALUES ('7', '2', '2');
 
 -- ----------------------------
 -- Table structure for t_app_user
@@ -95,7 +98,7 @@ CREATE TABLE `t_app_user` (
   `lastUpdate` datetime DEFAULT NULL COMMENT '末次修改时间',
   `status` int(255) DEFAULT NULL COMMENT '''0:禁用,1:启用''',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_app_user
@@ -111,7 +114,7 @@ CREATE TABLE `t_app_user_role` (
   `userId` int(11) NOT NULL COMMENT '用户id',
   `roleId` int(11) NOT NULL COMMENT '角色id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- ----------------------------
 -- Records of t_app_user_role

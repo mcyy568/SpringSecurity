@@ -1,20 +1,17 @@
 package com.spring.security.security.login;
 
-import java.io.UnsupportedEncodingException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-//import com.spring.security.security.CustomAuthenticationToken;
 import com.spring.security.exception.InvalidCaptchaException;
 import com.spring.security.util.CaptchaUtils;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+//import com.spring.security.security.CustomAuthenticationToken;
 
 /**
  * 创建用户：杨辽

@@ -1,9 +1,11 @@
 package com.spring.security.controller;
 
+import com.spring.security.controller.security.DefaultAppController;
 import com.spring.security.security.WebUserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -12,29 +14,33 @@ import org.springframework.web.servlet.ModelAndView;
  * 描    述：
  */
 @Controller
-public class HomePageController {
+public class HomePageController extends DefaultAppController {
 
-    @GetMapping(value = {"/HomePage"})
-    public ModelAndView homePage() {
-
+    /**
+     * 登录转跳页
+     *
+     * @return
+     */
+    @GetMapping(value = {"/home/{url}"})
+    public ModelAndView home(@PathVariable(required = false) String url) {
         WebUserDetails webUserDetails = (WebUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         ModelAndView model = new ModelAndView();
         model.addObject("appMenus", webUserDetails.getAppMenus());
-        model.setViewName("item/home");
+        model.addObject("url", "/" + url);
+        model.setViewName("public/public-home");
         return model;
-
     }
 
-    @GetMapping(value = {"/HomePage2"})
-    public ModelAndView homePage2() {
-
+    /**
+     * 首页
+     *
+     * @return
+     */
+    @GetMapping(value = {"/homePage"})
+    public ModelAndView homePage() {
         ModelAndView model = new ModelAndView();
-        WebUserDetails webUserDetails = (WebUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addObject("appMenus", webUserDetails.getAppMenus());
-        model.setViewName("item/home2");
+        model.setViewName("item/home");
         return model;
-
     }
 
 }

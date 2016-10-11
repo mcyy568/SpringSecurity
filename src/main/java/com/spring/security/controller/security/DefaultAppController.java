@@ -1,12 +1,8 @@
-package com.spring.security.controller;
+package com.spring.security.controller.security;
 
 import java.nio.charset.Charset;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.spring.security.exception.AuthException;
 import com.spring.security.exception.InvalidCaptchaException;
@@ -20,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.serializer.ValueFilter;
 
 /**
  * 创建用户：杨辽

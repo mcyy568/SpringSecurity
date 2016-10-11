@@ -1,4 +1,4 @@
-package com.spring.security.controller;
+package com.spring.security.controller.security;
 
 import com.alibaba.fastjson.JSONObject;
 import com.spring.security.exception.InvalidCaptchaException;
@@ -9,7 +9,6 @@ import nl.captcha.servlet.CaptchaServletUtil;
 import nl.captcha.text.renderer.DefaultWordRenderer;
 import nl.captcha.text.renderer.WordRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

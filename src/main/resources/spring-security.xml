@@ -86,7 +86,7 @@
             <!-- 自定义登录成功后的处理handler -->
             <beans:bean class="com.spring.security.security.login.CustomLoginHandler">
                 <!-- 登录成功后的默认url -->
-                <beans:property name="defaultTargetUrl" value="/HomePage"/>
+                <beans:property name="defaultTargetUrl" value="/home/homePage"/>
             </beans:bean>
         </beans:property>
         <beans:property name="authenticationFailureHandler">
