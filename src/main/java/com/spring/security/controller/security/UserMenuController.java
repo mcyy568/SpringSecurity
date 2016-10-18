@@ -15,6 +15,7 @@ public class UserMenuController {
     @GetMapping(value = "/menu")
     public ModelAndView menu(){
         ModelAndView model = new ModelAndView();
+        model.addObject("title", "权限管理");
         model.setViewName("permission/menu");
         return model;
     }

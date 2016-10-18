@@ -10,7 +10,7 @@ public interface AppRoleMapper {
 
     int deleteByExample(AppRoleExample example);
 
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(Integer id);
 
     int insert(AppRole record);
 

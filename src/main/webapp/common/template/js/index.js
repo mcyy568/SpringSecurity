@@ -58,7 +58,9 @@ $(".sub-menu li").click(function () {
     window.history.pushState({}, 0, 'http://' + window.location.host + item.val() + "/home" + $(this).attr("text"));
     $.get(url, function (result) {
         $("#dashboard").html(result);
+        //window.location.href = window.location.href;
     });
+
 });
 
 /*单击父菜单*/
@@ -71,5 +73,6 @@ $(".no-Child").click(function () {
     window.history.pushState({}, 0, 'http://' + window.location.host + item.val() + "/home" + $(this).attr("text"));
     $.get(url, function (result) {
         $("#dashboard").html(result);
+        //window.location.href = window.location.href;
     });
 });

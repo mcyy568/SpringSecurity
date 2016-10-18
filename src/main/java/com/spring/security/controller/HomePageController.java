@@ -2,6 +2,7 @@ package com.spring.security.controller;
 
 import com.spring.security.controller.security.DefaultAppController;
 import com.spring.security.security.WebUserDetails;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,13 +22,37 @@ public class HomePageController extends DefaultAppController {
      *
      * @return
      */
-    @GetMapping(value = {"/home/{url}"})
-    public ModelAndView home(@PathVariable(required = false) String url) {
-        WebUserDetails webUserDetails = (WebUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        ModelAndView model = new ModelAndView();
-        model.addObject("appMenus", webUserDetails.getAppMenus());
-        model.addObject("url", "/" + url);
-        model.setViewName("public/public-home");
+    @GetMapping(value = {"/home/{url_1}"})
+    public ModelAndView home1(@PathVariable(required = false) String url_1) {
+        ModelAndView model = getWebUserDetails();
+        model.addObject("url", "/" + url_1);
+        return model;
+    }
+
+    @GetMapping(value = {"/home/{url_1}/{url_2}"})
+    public ModelAndView home2(@PathVariable(required = false) String url_1,
+                              @PathVariable(required = false) String url_2) {
+        ModelAndView model = getWebUserDetails();
+        model.addObject("url", "/" + url_1 + "/" + url_2);
+        return model;
+    }
+
+    @GetMapping(value = {"/home/{url_1}/{url_2}/{url_3}"})
+    public ModelAndView home3(@PathVariable(required = false) String url_1,
+                              @PathVariable(required = false) String url_2,
+                              @PathVariable(required = false) String url_3) {
+        ModelAndView model = getWebUserDetails();
+        model.addObject("url", "/" + url_1 + "/" + url_2 + "/" + url_3);
+        return model;
+    }
+
+    @GetMapping(value = {"/home/{url_1}/{url_2}/{url_3}/{url_4}"})
+    public ModelAndView home4(@PathVariable(required = false) String url_1,
+                              @PathVariable(required = false) String url_2,
+                              @PathVariable(required = false) String url_3,
+                              @PathVariable(required = false) String url_4) {
+        ModelAndView model = getWebUserDetails();
+        model.addObject("url", "/" + url_1 + "/" + url_2 + "/" + url_3 + "/" + url_4);
         return model;
     }
 
@@ -43,4 +68,12 @@ public class HomePageController extends DefaultAppController {
         return model;
     }
 
+    public static ModelAndView getWebUserDetails() {
+        WebUserDetails webUserDetails = (WebUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        ModelAndView model = new ModelAndView();
+        model.addObject("appMenus", webUserDetails.getAppMenus());
+        model.addObject("title", "首页");
+        model.setViewName("public/public-home");
+        return model;
+    }
 }

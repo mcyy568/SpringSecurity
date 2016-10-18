@@ -1,4 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- 开始页面标题-->
+<div class="row-fluid">
+    <div class="span12">
+        <%--页面风格--%>
+        <c:import url="../public/page-style.jsp"/>
+        <h3 class="page-title">首页</h3>
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home"></i>
+                <a href="#">首页</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
 
 <!--仪表数据的开始-->
 <div class="row-fluid">

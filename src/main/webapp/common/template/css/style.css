@@ -5468,3 +5468,8 @@ Datatables Plugin(in v1.3)
 .dataTable .details tr:nth-child(even) th {
     background-color: #eee !important;
 }
+
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+}
